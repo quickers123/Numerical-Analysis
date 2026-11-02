@@ -1,0 +1,684 @@
+\documentclass[]{article}
+
+\usepackage{amsmath, amsfonts, amssymb, dsfont}
+\usepackage{float}
+\usepackage{fancyhdr}
+\usepackage{fontawesome5}
+\usepackage{mathrsfs}
+\usepackage{amsmath}
+\allowdisplaybreaks 
+\usepackage{arydshln} 
+\usepackage{tikz}
+\usetikzlibrary{automata, positioning}
+
+\usepackage[utf8]{inputenc}
+
+
+\usepackage{graphicx, adjustbox, float, xcolor}
+
+
+\usepackage{tikz, pgfplots}
+\pgfplotsset{compat=1.17}
+
+\usetikzlibrary{arrows.meta, automata, positioning, decorations.pathreplacing, decorations.markings}
+\newcommand{\interior}[1]{%
+  {\kern0pt#1}^{\mathrm{o}}%
+}
+
+\usepackage{booktabs, enumitem, caption}
+
+
+\usepackage{minted} 
+\usemintedstyle{friendly}
+\setminted{fontsize=\small,autogobble,mathescape}
+
+\usepackage[a4paper,
+  includehead,includefoot,
+  top=5mm,           
+  headheight=15pt,   
+  headsep=1pt,       
+  bottom=20mm,left=40mm,right=40mm
+]{geometry}
+
+\pagestyle{fancy}
+
+
+\lhead{Ben Vickers - 304024}
+\rhead{Numerical Analysis Assignment 3}
+\setlength{\headsep}{0.4cm} 
+\usepackage{titling}
+\setlength{\droptitle}{-70pt}   
+
+\title{\textbf{Numerical Analysis Assignment 3}}
+\author{Ben Vickers - 304024}
+\date{\textbf{Due: 13:59, Thursday 4 December 2025}}
+
+\begin{document}
+
+	\maketitle
+\noindent\textbf{Assessed exercise 3.1 (Stability analysis of the scalar linear IVP)} Let $Y$ be the solution of the scalar first order linear IVP:
+\[
+\begin{aligned}
+\dot y &= f(t,y) := a(t)\,y,\\ y(0)&=y_0,
+\end{aligned}\tag{1}
+\]
+where $a\in C^0(\mathbb{R})$ is a continuous function satisfying
+\[
+\lambda := \sup_{t\in\mathbb{R}} |a(t)| < \infty.
+\]
+Let $\epsilon>0$ and suppose that $b\in C^0(\mathbb{R})$ and $\delta\in\mathbb{R}$ are such that
+\[
+\|b\|_{L^\infty}\le \epsilon,\qquad |\delta|\le \epsilon.
+\]
+Consider the solution $\tilde Y$ of the perturbed IVP
+\[
+\begin{aligned}
+    \dot y &= \tilde f(t,y) := a(t)\,y + b(t),\\ y(0)&=y_0+\delta.\end{aligned}
+ \tag{2}
+\]
+\begin{enumerate}
+\item By showing that both $f$ and $\tilde f$ are globally Lipschitz in the appropriate sense, use the results from lectures to deduce that both \textup{(1)} and \textup{(2)} have unique solutions. Furthermore, what is the Lipschitz constant?
+\end{enumerate}
+
+\noindent \textbf{SOLUTION:} \newline
+
+\noindent To show that $f$ and $\tilde{f}$ are globally Lipschitz in the second variable we have:
+\[
+|f(t,y_1)-f(t,y_2)|
+= |a(t)y_1 - a(t)y_2|
+= |a(t)|\,|y_1-y_2|
+\leq \lambda\,|y_1-y_2|
+\]
+\noindent Therefore $f$ is globablly Lipschitz in the second variable on its entire domain (we could denote this as $D$) with Lipschitz constant $L = \lambda$.\newline
+
+\noindent Similarly for $\tilde{f}$ we have:
+\[
+|\tilde f(t,y_1)-\tilde f(t,y_2)|
+= |a(t)y_1 + b(t) - (a(t)y_2 + b(t))|
+= |a(t)|\,|y_1-y_2|
+\leq \lambda\,|y_1-y_2|
+\]
+\noindent Therefore $\tilde f$ is also globally Lipschitz in the second variable on $D$ with the same Lipschitz constant $L = \lambda$.\newline
+
+
+\noindent Now in order to show that both IVPs have unique solutions we notice that since $a$ and $b$ are continuous, and $f$ and $\tilde{f}$ are linear/affine in $y$, we have that both $f$ and $\tilde f$ are continuous on $D$.\newline
+
+\noindent Now since our Lipschitz inequalities hold for all $(t,y_1),(t,y_2)\in D$, we have that, independently of $(t_0,y_0)\in D$, it holds that $\forall\, \rho>0$ and all $(t,y_1),(t,y_2)\in \overline{B_{\rho}((t_0,y_0))}\cap D$:
+\[
+|f(t,y_1)-f(t,y_2)| \leq \lambda |y_1-y_2|
+\]
+\noindent I.e.\ regardless of initial conditions and radius $\rho$, then for any points in the ball centered at the initial conditions, $(t_0,y_0)$ with radius $\rho$ the local Lipschitz condition holds with $K_0=\lambda$. (The same applies for $\tilde f$).\newline
+
+\noindent Therefore, by Theorem 5.8 both IVPs admit a unique local solution: $Y$ (and $\tilde{Y}$), on an open interval $I$ (and $\tilde I$) of the form $(t_0-\delta,t_0+\delta)$ such that $Y:I\to\mathbb{R}$ (and $\tilde{Y}:\tilde{I}\to\mathbb{R}$).\newline
+
+\noindent Now, by Proposition 5.13, we have that by taking larger neighbourhoods about the respective initial conditions (i.e.\ increasing $\rho \implies$ increasing $\delta \implies $ larger time intervals), the solutions on the overlapping intervals must still coincide on their intersections. \noindent Therefore we can obtain maximal solutions:
+\[
+Y_{\max}:I_{\max}\to\mathbb{R} \quad \text{and} \quad \tilde Y_{\max}:\tilde I_{\max}\to\mathbb{R}
+\]
+\noindent Then since we have shown $f$ and $\tilde{f}$ are globally Lipschitz, it follows by theorem 5.16 that:
+\[
+I_{\max} = \mathbb{R}, \qquad \tilde I_{\max} = \mathbb{R}
+\]
+\noindent Hence both of the IVPs have a unique solution defined on the entirety of $\mathbb{R}$.
+
+
+
+\begin{enumerate}
+\setcounter{enumi}{1}
+\item Show that the perturbation error $e(t):=\tilde Y(t)-Y(t)$ satisfies
+\[
+\begin{aligned}
+e'(t)&=a(t)\,e(t)+b(t),\\ e(0)&=\delta. 
+\end{aligned}
+\]
+\end{enumerate}
+\noindent \textbf{SOLUTION:} \newline
+
+\noindent We have:
+\begin{align*}
+e'(t) &= \tilde{Y}'(t) - Y'(t)\\
+&= \left(a(t)\,\tilde Y(t) + b(t)\right) - a(t)Y(t) \\
+      &= a(t)\left(\tilde Y(t) - Y(t)\right) + b(t) \\
+      &= a(t)e(t) + b(t)
+\end{align*}
+\noindent Then:
+\[
+e(0) = \tilde{Y}(0) - Y(0) = (y_0 + \delta) - y_0 = \delta
+\]
+\begin{enumerate}
+\setcounter{enumi}{2}
+\item Using an integrating factor or otherwise, show that
+\[
+e(t)=\delta\,\exp(A(t))+\int_0^t b(s)\,\exp\left(A(t)-A(s)\right)\,ds, \tag{3}
+\]
+where
+\[
+A(t):=\int_0^t a(s)\,ds. \tag{4}
+\]
+
+\end{enumerate}
+
+\noindent\textbf{SOLUTION:}\newline
+
+\noindent We are given:
+\[
+A(t) := \int_0^t a(s)\,ds \implies A'(t) = a(t)
+\]
+\noindent As we have shown:
+\[
+e'(t)=a(t)e(t) + b(t)
+\]
+\noindent We can multiply through by a to be determined integrating factor, $\mu$:
+\[
+\implies e'(t)\mu(t)=a(t)\mu(t)e(t)+\mu(t)b(t)
+\]
+\noindent This suggests that we want our $\mu(t)$ to be such that $a(t)\mu(t) = - \mu'(t)$ to ensure we can then apply the product rule.\newline
+\[
+a(t)\mu(t) = - \mu'(t) \implies \mu(t) = \exp\left(-\int_0^t a(s)\,ds\right) = \exp(-A(t))
+\]
+\noindent Hence we have:
+\begin{align*}
+    e'(t)\mu(t)&=a(t)\mu(t)e(t)+\mu(t)b(t)\\
+\implies \mu(t)b(t) &=  e'(t)\mu(t)-a(t)\mu(t)e(t)\\  &=  e'(t)\mu(t)-a(t)\exp(-A(t))e(t)\\
+  &=  e'(t)\mu(t) +\left(\exp(-A(t))\right)'e(t)\\
+  &=  e'(t)\mu(t) +\left(\mu(t)\right)'e(t)\\
+  &= \left(e(t)\mu(t)\right)'
+\end{align*}
+\noindent So we have:
+\[
+\left(e(t)\exp(-A(t))\right)' = b(t)\exp(-A(t))
+\]
+\noindent Integrating both sides from $0$ to $t$ yields:
+\begin{align*}
+&e(t)\exp(-A(t)) - e(0)\exp(-A(0)) = \int_0^t b(s)\exp(-A(s))\,ds\\
+&\implies e(t)\exp(-A(t)) -\delta=\int_0^t b(s)\exp(-A(s))\,ds\\
+&\implies e(t) = \delta\exp(A(t)) +\int_0^t b(s)\exp(A(t)-A(s))\,ds
+\end{align*}
+
+
+\begin{enumerate}
+\setcounter{enumi}{3}
+\item Suppose that there is $\mu\le \lambda$ such that $a(t)\in[-\lambda,\mu]$ for all $t\in\mathbb{R}$.
+
+\begin{enumerate}
+\item Show that if $\mu<0$, then
+\[
+|e(t)| \;\le\; \frac{1+(|\mu|-1)\,\exp(\mu t)}{|\mu|}\,\epsilon \;\le\;
+\begin{cases}
+\epsilon/|\mu|, & \mu\in(-1,0),\\[2pt]
+\epsilon, & \mu\le -1,\\
+\end{cases} \tag{5}
+\]
+\noindent and hence, as $\epsilon\to 0$, the perturbation error converges to zero uniformly on $[0,\infty)$.
+\end{enumerate}
+
+\noindent\textbf{SOLUTION:}\newline
+
+\noindent As we saw above:
+\[
+e(t) = \delta\exp(A(t)) +\int_0^t b(s)\exp(A(t)-A(s))\,ds
+\]
+
+\noindent We therefore have:
+\begin{align*}
+    |e(t)|    &= \left|\delta\exp(A(t)) +\int_0^t b(s)\exp(A(t)-A(s))\,ds\right|\\
+    &\leq \left|\delta\exp(A(t))\right| +\left|\int_0^t b(s)\exp(A(t)-A(s))\,ds\right|
+\end{align*}
+\noindent Then since we are given that $|\delta|\leq \epsilon$ and $\|b\|_{L^\infty}\leq \epsilon$, we have:
+\[
+\begin{aligned}
+|e(t)|
+&\leq \epsilon \exp(A(t)) + \left|\int_0^t b(s)\exp(A(t)-A(s))\,ds\right|\\
+&\leq \epsilon \exp(A(t)) + \epsilon \left| \int_0^t\exp(A(t)-A(s))\,ds \right|
+\end{aligned}
+\]
+
+
+\noindent Since $a(t) \in [-\lambda, \mu]$ we have:
+\[
+A(t)=\int_0^t a(s)\,ds \leq \int_0^t \mu\,ds = \mu t \, \implies \exp(A(t)) \leq \exp(\mu t)
+\]
+\noindent Therefore the previous inequality becomes:
+\[
+|e(t)| \leq \epsilon \exp(\mu t) + \epsilon \left|\int_0^t\exp(A(t)-A(s))\,ds\right|
+\]
+
+\noindent Considering $\displaystyle \left|\int_0^t\exp(A(t)-A(s))\,ds\right|$ we have:
+\begin{align*}
+\left|\int_0^t\exp(A(t)-A(s))\,ds\right|
+&= \left|\int_0^t\exp\left(\int_s^t a(u)\,du \right)\,ds\right|\\
+&\leq \left|\int_0^t\exp\left(\int_s^t \mu\,du \right)\,ds\right|\\
+&= \left|\int_0^t\exp\left( \mu(t-s)\right)\,ds\right|\\
+&= \left|\int_0^t \exp(\mu v)\,dv\right|\\
+&= \left|\frac{1}{\mu}\left(\exp(\mu t)-1\right)\right|
+\end{align*}
+\noindent Given we have that $\mu<0 \implies \exp({\mu t})\leq 1$ (for $t\geq 0$) $\implies \exp({\mu t})-1\leq 0$ therefore:
+\[
+\left|\int_0^t\exp(A(t)-A(s))\,ds\right|
+\leq \left|\frac{\exp({\mu t})-1}{\mu}\right|
+= \frac{1-\exp({\mu t})}{|\mu|}
+\]
+
+\noindent Therefore we have:
+\begin{align*}
+    |e(t)|
+    &\leq \epsilon \exp(\mu t) + \epsilon \left|\int_0^t\exp(A(t)-A(s))\,ds\right|\\
+    &\leq \epsilon \exp(\mu t) + \epsilon\,\frac{1-\exp({\mu t})}{|\mu|}\\
+    &= \epsilon\left( \exp(\mu t) + \frac{1-\exp(\mu t)}{|\mu|}\right)\\
+    &= \epsilon\left(\frac{|\mu|\exp(\mu t) + 1 - \exp(\mu t)}{|\mu|}\right)\\
+    &= \epsilon\left(\frac{\exp(\mu t)\left(|\mu|-1\right)+1}{|\mu|}\right)
+\end{align*}
+
+\noindent Then if $\mu\in(-1,0)$ we have:
+\begin{align*}
+    \mu \in (-1,0) & \implies |\mu| \in (0,1)\\
+    & \implies |\mu| - 1 \in (-1,0)\\
+    \text{Also }  \mu \in (-1,0) & \implies \exp(\mu t) \in (0,1] \\
+    & \implies \left(|\mu| - 1 \right)\exp(\mu t) \in (-1,0)\\
+    & \implies  \left(|\mu| - 1 \right)\exp(\mu t) +1 \in (0,1)\\
+        & \implies \left[\left(|\mu| - 1 \right)\exp(\mu t) +1\right] \frac{\epsilon}{|\mu|} \in (0,\frac{\epsilon}{|\mu|})
+    \end{align*}
+\noindent Or, if $\mu \leq -1$ we have:
+\[
+\mu \leq -1 \implies |\mu| \geq 1 \implies |\mu|-1 \geq 0
+\]
+\begin{align*}
+  \text{Also }  \mu \leq -1    & \implies \exp({\mu t})\in (0,1] \\
+ & \implies    \exp({\mu t}) \left(|\mu| -1 \right) \leq |\mu| -1 \\
+ &  \implies    1+\exp({\mu t}) \left(|\mu| -1 \right) \leq |\mu| \\
+  &    \implies   \frac{1+\exp({\mu t}) \left(|\mu| -1 \right)}{|\mu|} \leq 1 \\
+     &       \implies   \frac{1+\exp({\mu t}) \left(|\mu| -1 \right)}{|\mu|} \epsilon \leq \epsilon  
+\end{align*}
+\noindent Therefore:
+\[
+|e(t)| \leq \frac{1+(|\mu|-1)\,\exp({\mu t})}{|\mu|}\,\epsilon  \leq
+\begin{cases}
+\epsilon/|\mu|, & \mu\in(-1,0),\\[2pt]
+\epsilon, & \mu\le -1
+\end{cases}
+\]
+
+\noindent Now to show that $e(t)$ converges to zero uniformly on $[0,\infty)$ we can define:
+\[
+C_{\mu} :=
+\begin{cases}
+\frac{1}{|\mu|}, & \mu\in(-1,0),\\[4pt]
+1, & \mu\leq -1.
+\end{cases}
+\]
+\noindent Where we notice that $C_{\mu}>0$ is independent of $t$ and $\epsilon$. Then it holds from the previous result that $\forall t \in [0,\infty)$:
+\[
+|e(t)| \leq \frac{1+(|\mu|-1)\,\exp({\mu t})}{|\mu|}\,\epsilon   \leq C_{\mu}\epsilon
+\]
+\noindent Then because $C_{\mu}$ is independent of $t$, it holds that:
+\[
+\sup_{t\in[0,\infty)} |e(t)|\leq C_{\mu}\,\epsilon,
+\]
+\noindent Therefore we have:
+\[
+\lim_{\epsilon\to 0}\sup_{t\in[0,\infty)} |e(t)|
+\;\leq\; \lim_{\epsilon\to 0} C_{\mu}\,\epsilon =C_{\mu} \lim_{\epsilon\to 0}\epsilon  
+= 0.
+\]
+\noindent Therefore it holds that as $\epsilon\to 0$, the perturbation error converges to zero uniformly on $[0,\infty)$.
+
+\begin{enumerate}
+\item[(b)] Show that if $\mu>0$, then
+\[
+|e(t)| \;\le\; \frac{(\mu+1)\,\exp(\mu t)-1}{\mu}\,\epsilon. \tag{6}
+\]
+\end{enumerate}
+
+\noindent\textbf{SOLUTION:}\newline
+\noindent As we have seen previously:
+\begin{align*}
+ e(t) &= \delta\exp(A(t)) +\int_0^t b(s)\exp(A(t)-A(s))\,ds\\
+\implies |e(t)| &\leq \epsilon \exp(A(t)) + \epsilon \left|\int_0^t\exp(A(t)-A(s))\,ds\right|\\
+& \leq \epsilon \exp(\mu t) + \epsilon \left|\frac{1}{\mu}\left(\exp(\mu t)-1\right)\right|\\
+&= \epsilon\left[\frac{\exp(\mu t) \mu}{\mu} +\frac{\exp(\mu t)-1}{\mu}\right]\\
+&= \epsilon\left[\frac{\exp(\mu t) \left( \mu +1\right)-1}{\mu}\right]
+\end{align*}
+
+
+\begin{enumerate}
+\item[ ] As $\epsilon\to 0$ can it be concluded that
+\begin{itemize}
+\item $e(t)$ converges to zero for each fixed $t$?
+\item $e$ converges to zero uniformly on any bounded time interval $[0,T]$ ($T<\infty$)?
+\item $e$ converges to zero uniformly on $[0,\infty)$?
+\end{itemize}
+\end{enumerate}
+\end{enumerate}
+
+\noindent\textbf{SOLUTION:}\newline
+
+\noindent We have shown that for $\mu>0$ it holds that:
+\[
+|e(t)| \leq \frac{(\mu+1)\,\exp(\mu t)-1}{\mu}\,\epsilon
+\]
+\noindent Then for each fixed $t$, we can define $C_t$:
+\[
+C_t:= \frac{(\mu+1)\,\exp(\mu t)-1}{\mu}
+\]
+\noindent Where for each fixed $t$, $C_t$ is finite. Hence we have that that for a fixed $t$:
+\[
+|e(t)| \leq C_t \epsilon\]
+\[\implies \displaystyle \lim_{\epsilon \to 0} |e(t)|  \leq \displaystyle \lim_{\epsilon \to 0}  C_t \epsilon =  C_t \lim_{\epsilon \to 0}  \epsilon  = 0
+\]
+\noindent Hence, $e(t)$ converges to $0$ for each fixed $t$.\newline
+
+\noindent On a bounded time interval $[0,T]$ with $T<\infty$ we have that since $C_t$ is strictly increasing in $t$:
+ \[
+  \sup_{t\in[0,T]} C_t = C(T) = \frac{(\mu+1)\,\exp(\mu T)-1}{\mu}
+  \]
+\noindent Therefore we have that for any bounded time interval, $[0,T]$:
+\[
+\forall t\in [0,T] \,:\,|e(t)| \leq C_t\,\epsilon \le C(T)\,\epsilon
+\]
+  \[
+\implies  \displaystyle \lim_{\epsilon\to 0} \sup_{t\in[0,T]} |e(t)| \leq \lim_{\epsilon\to 0}  \sup_{t\in[0,T]} C_t \epsilon = \displaystyle \lim_{\epsilon\to 0} C(T)\,\epsilon=C(T) \displaystyle \lim_{\epsilon\to 0}\epsilon=0
+  \]
+\noindent Therefore $e(t)$ converges to zero uniformly on any bounded interval $[0,T]$.\newline
+
+\noindent If we have an unbounded interval (i.e. $T= \infty$), then:
+\[
+(C(\infty) = ) \displaystyle \lim_{t\to \infty} C_t = \displaystyle \lim_{t\to \infty}\frac{(\mu+1)\,\exp({\mu t})-1}{\mu} = \infty
+\]
+\[
+\implies   \sup_{t\in[0,\infty)} C_t = \infty
+\]
+\noindent Therefore we cannot conclude that:
+\[
+ \displaystyle \lim_{\epsilon\to 0}\sup_{t\in[0,\infty)} C_t \epsilon = 0
+\]
+\noindent I.e. we cannot conclude that $e$ converges to $0$ uniformly on $[0,\infty)$.
+
+\newpage
+\noindent\textbf{Assessed exercise 3.2 (Second order ODEs)}
+Consider the ODE
+\[
+\begin{aligned}
+    \ddot y + \sin(\dot y) &= \cos(\omega t),\\ \dot y(0)&=a,\\ y(0)&=b
+\end{aligned}
+\]
+for $a,b,\omega\in\mathbb{R}$.
+
+Supposing sufficient regularity holds, we will show that there exists a solution to the above second order ODE.
+\begin{enumerate}
+\item Construct a vector–valued first order system of the form
+\[
+(\dot y,\dot z)=f\left(t,(y,z)\right)
+\]
+such that $Y$ which solves the second order system should be (the first component of) the solution of this system, where the function $f$ should be stated along with appropriate initial conditions.
+\end{enumerate}
+
+\noindent \textbf{SOLUTION:}\newline
+
+\noindent Defining:
+\[
+z(t) := \dot{y}(t)
+\]
+\noindent We then have:
+\[
+\dot{z}(t) = \ddot{y}(t)
+\]
+\noindent So our existing ODE:
+\[
+\begin{aligned}
+    \ddot y + \sin(\dot y) = \cos(\omega t)
+\end{aligned}
+\]
+\noindent Becomes:
+\[
+\dot{z}(t) + \sin(z(t)) = \cos(\omega t) \implies \dot{z}(t) = \cos(\omega t) - \sin(z(t))
+\]
+\noindent Therefore, we now have the vector valued first order system of the form:
+\[
+\begin{aligned}
+\dot {y}(t) &= z(t)\\
+\dot{z}(t) &= \cos(\omega t) - \sin\left(z(t)\right)
+\end{aligned}
+\]
+\noindent This can be expressed in the required form:
+\[
+(\dot y(t),\dot z(t))
+= f\left(t,(y(t),z(t))\right)
+\]
+\noindent Where we have that:
+\[
+f\left(t,(y,z)\right) := \left(z(t),\cos(\omega t) - \sin(z)\right)
+\]
+
+\noindent Our initial conditions then become:
+\[
+y(0)=b \text{ as before, and } z(0) = \dot{y}(0)=a
+\]
+\noindent So altogether we have:
+\[
+\begin{aligned}
+\dot {y}(t) &= z(t)\\
+\dot{z}(t) &= \cos(\omega t) - \sin\left(z(t)\right)\\
+y(0)&=b\\
+ z(0) &=a
+\end{aligned}
+\]
+
+
+\begin{enumerate}
+    \setcounter{enumi}{1}
+\item Show that the $f$ constructed above is appropriately smooth, hence apply a result from lecture notes in order to conclude the unique existence (at least for small time) of a pair $(Y,Z)$ which solves the first order system.
+\end{enumerate}
+
+\noindent\textbf{SOLUTION:}\newline
+
+\noindent Here we want to apply Theorem 5.8 which requires that $f$ is continiuous, and is Lipschitz in the second variable. We have that:
+\[
+f\left(t,(y,z)\right) := \left(z,\cos(\omega t) - \sin(z)\right)
+\]
+\noindent We can take that since both components of $f$ are made from linear combinations of smooth functions:  $z$, $\cos(\omega t)$ and $\sin(z)$, it holds that $f$ is $C^{\infty}$. To show then that we have $f$ being Lipschitz in the second variable, we can define:
+\[
+u_1 = (y_1,z_1),\quad u_2 = (y_2,z_2) 
+\]
+Then we have:
+\begin{align*}
+     \|f(t,(y_1,z_1))-f(t,(y_2,z_2) )\| &=    \|f(t,u_1)-f(t,u_2)\|\\
+     &= \|(z_1,\cos(\omega t)-\sin(z_1)) - (z_2,\cos(\omega t) - \sin(z_2))\|\\
+&=\|(z_1-z_2, \sin(z_2) - \sin(z_1))\|\\
+&= \sqrt{(z_1-z_2)^2+(\sin(z_2)-\sin(z_1))^2}
+\end{align*}
+
+\noindent At this point we can notice that by the Mean Value Theorem that there must exist some $\tilde{z}$ between $z_1$ and $z_2$ such that:
+\[
+\sin(z_1) - \sin(z_2) = \sin'(\tilde z)\,(z_1 - z_2) = \cos(\tilde z)\,(z_1 - z_2).
+\]
+\[\implies |\sin(z_1)-\sin(z_2)| = | \cos(\tilde z)||z_1-z_2| \leq |z_1-z_2|
+\]
+\[
+\implies (\sin(z_2)-\sin(z_1))^2 \leq (z_1-z_2)^2
+\]
+\noindent Hence $\sin$ is Lipschitz with constant $1$. So our expression becomes:
+\begin{align*}
+    \|f(t,u_1)-f(t,u_2)\| &= \sqrt{(z_1-z_2)^2+(\sin(z_2)-\sin(z_1))^2}\\
+    &\leq \sqrt{(z_1-z_2)^2+(z_1-z_2)^2}\\
+    &= \sqrt{2}\sqrt{(z_1-z_2)^2}\\
+    &\leq \sqrt{2}\sqrt{(z_1-z_2)^2+(y_1-y_2)^2}\\
+    &=\sqrt{2}\|u_1-u_2\|
+\end{align*}
+\noindent Hence $f$ is indeed Lipschitz in the second variable, $(y,z) = u$ (with Lipschitz constant $\sqrt{2}$).\newline
+
+\noindent Then applying Theorem 5.8 immediatetly then gives us that around the initial conditions given:
+\[
+\left(t_0,(y(0),z(0))\right) = (0,u(0)) = (0,(b,a))
+\]
+There exists some $\delta>0$ whereby there is a unique local solution $u(t) = (Y(t),Z(t))$ defined locally on $ (-\delta,\delta)$ such that:
+\[
+\dot{u}(t) = f\left(t,u(t)\right),\qquad u(0) = (b,a).
+\]
+\noindent I.e. there exists a unique pair $(Y,Z)$, at least for small time, which solves the first order system. Note that since $f$ is globally Lipschitz in its second variable, we could actually apply the same kind of result obtained in $3.1.1$ to state that rather than just for a small time, we actually have the same unique solution for all time.\newline
+
+\newpage
+
+\noindent\textbf{Assessed exercise 3.3}
+Consider the simple ODE
+\[
+\dot y=\lambda y,\qquad y(0)=1,
+\]
+where $\lambda>0$ is some given number. This has solution $Y(x)=\exp(\lambda x)$.
+\begin{enumerate}
+\item State the forward Euler discretisation of the above ODE with $N$ points and a uniform discretisation on $[0,1]$.
+\end{enumerate}
+
+\noindent\textbf{SOLUTION:}\newline
+
+\noindent Discretising the interval $[0,1]$ uniformly into $N$ points gives us that:
+\[
+h = \frac{1}{N}, \qquad x_n := n h,\quad n=0,1,\dots,N
+\]
+\noindent We can then give the FE discretisation of the ODE as:
+\[
+\begin{cases}
+    y^{n+1} = y^{n} + \frac{1}{N}\lambda y^{n}  &=y^{n} \left(1+ \frac{\lambda}{N} \right) \\
+    y^0 &= 1
+    \end{cases} \,;\,  n = 0,1,\dots,N-1
+\]
+\begin{enumerate}
+\setcounter{enumi}{1}
+\item Solve the forward Euler discretisation (this is possible by hand) to obtain an explicit form of $y^n$ which should approximate $Y(x_n)$.
+\end{enumerate}
+
+\noindent\textbf{SOLUTION:}\newline
+
+\noindent Evaluating the first few iterations yields:
+\[
+\begin{aligned}
+y^1 &= y^0(1+ \frac{\lambda}{N} ) = (1+ \frac{\lambda}{N} )\\
+y^2 &= (1+ \frac{\lambda}{N})\,y^1 = (1+\frac{\lambda}{N})^2\,\\
+&\,\,\,\,\vdots\\
+y^n &= (1+ \frac{\lambda}{N})^n\,\,:\qquad n=0,1,\dots,N
+\end{aligned}
+\]
+\noindent We can reexpress this as:
+\[
+y^n = (1+ \frac{\lambda}{N})^{x_nN} = \left[\left(1+\frac{\lambda}{N}\right)^{N}\right]^{x_n}  
+\]
+\noindent For large $N$, we therefore have:
+\[
+y^n = \left[\left(1+\frac{\lambda}{N}\right)^{N}\right]^{x_n}   \approx \exp({\lambda x_n}) 
+\]
+\noindent Hence we have that $y^n$ approximates the exact solution  $Y(x)=\exp({\lambda x})$ on the discretised set of points along the interval $[0,1]$.
+
+\begin{enumerate}
+\setcounter{enumi}{2}
+\item Suppose that
+$
+(1+h\lambda)^n \;=\; \exp(\lambda n h)\left(1-\frac{\lambda^2 n h^2}{2}\right)+\mathcal{O}(h^3).
+$ Show that there exists $c>0$ such that for all $h$ sufficiently small,
+$
+Y(1)-y^N \geq ch.$\newline
+
+\end{enumerate}
+
+\noindent\textbf{SOLUTION:}\newline
+
+\noindent Since we know that the solution $Y(x)=\exp(\lambda x)$, it holds that $Y(1) = \exp({\lambda})$.\newline
+
+\noindent Therefore:
+\[
+Y(1) - y^N = \exp({\lambda}) - y^N
+\]
+\noindent Then since we have from the FE discretisation:
+\[
+y^n = \left(1+ \frac{\lambda}{N}\right)^n =(1+h\lambda)^n \implies y^N = (1+h\lambda)^N
+\]
+\noindent Applying the equality provided:
+\[
+(1+h\lambda)^n = \exp(\lambda n h)\left(1-\frac{\lambda^2 n h^2}{2}\right)+\mathcal{O}(h^3)
+\]
+\noindent We have for $n=N$:
+\[
+y^N = (1+h\lambda)^N = \exp(\lambda N h)\left(1-\frac{\lambda^2 N h^2}{2}\right)+\mathcal{O}(h^3)
+\]
+\noindent Then since it holds that $Nh = 1$:
+\[
+y^N = (1+h\lambda)^N = \exp(\lambda)\left(1-\frac{\lambda^2h}{2}\right)+\mathcal{O}(h^3) \]
+\begin{align*}
+ \implies Y(1)-y^N &= \exp({\lambda}) - \exp(\lambda)\left(1-\frac{\lambda^2h}{2}\right)-\mathcal{O}(h^3)\\
+    &=  \exp({\lambda}) \left(\frac{\lambda^2h}{2} \right)-\mathcal{O}(h^3)\\
+     &=  \exp({\lambda}) \left(\frac{\lambda^2h}{2} \right)+\mathcal{O}(h^3) \text{ by convention of big-O notation} 
+\end{align*}
+\noindent At this stage we can define the constant term:
+\[
+C:= \frac{\lambda^2}{2}\exp({\lambda}) > 0
+\]
+\noindent So we can then say:
+\[
+Y(1)-y^N = Ch + \mathcal{O}(h^3)
+\]
+\noindent Since we know that:
+\[
+\lim_{h\to 0} \frac{\mathcal{O}(h^3)}{h} = 0 \implies \exists h^*_C\text{ such that } \forall h\in(0,h^*_C):\]
+\[
+\left|\frac{\mathcal{O}(h^3)}{h}\right| \leq \frac{C}{2} \implies \left|\mathcal{O}(h^3)\right| \leq \frac{C}{2}h
+\]
+\noindent Therefore:
+\[
+\forall h \in (0,h_C^*)\,:\,Y(1)-y^N = Ch + \mathcal{O}(h^3) 
+\;\geq\; Ch - \left|\mathcal{O}(h^3)\right|
+\;\geq\; Ch - \frac{C}{2}h
+= \frac{C}{2}\,h
+\]
+Hence $\displaystyle \forall\, h \in (0,h_C^*)\,:\,Y(1)-y^N   \geq \frac{C}{2}h$ and so taking $c:=\frac{C}{2}$ it holds that for all $h$ sufficiently small we have that:
+\[
+Y(1)-y^N   \geq c h
+\]
+
+\noindent For \textbf{fun, but no marks}, show that
+$
+(1+h\lambda)^n \;=\; \exp(\lambda n h)\left(1-\frac{\lambda^2 n h^2}{2}\right)+\mathcal{O}(h^3).
+$\newline
+
+\noindent\textbf{SOLUTION:}\newline
+
+\noindent This is a matter of applying a Binomial and Taylor expansion respectively to LHS and RHS.
+
+\begin{itemize}
+    \item We apply the Binomial Theorem to LHS: $(1+h\lambda)^n $
+\end{itemize}
+\begin{align*}
+(1+h\lambda)^n  &=  \sum_{k=0}^n \binom{n}{k} (\lambda h)^k = 1+n\cdot\lambda h +  \frac{n(n-1)}{2}\lambda^2 h^2 + \sum_{k=3}^n \binom{n}{k} (\lambda h)^k \\
+&= 1+n\cdot\lambda h +  \frac{n(n-1)}{2}\lambda^2 h^2 + \mathcal{O}(h^3)\\
+&= 1 + \lambda n h + \frac{\lambda^2 n(n-1)}{2}h^2 + \mathcal{O}(h^3)
+\end{align*}
+
+\begin{itemize}
+    \item We then apply the Taylor expansion of $e^x$ to RHS : $\exp(\lambda n h)$
+\end{itemize}
+\begin{align*}
+    \exp(\lambda n h) &= 1 + \lambda n h + \frac{\lambda^2 n^2 h^2}{2}  +\frac{(\lambda n h)^k}{k!}\\
+     &= 1 + \lambda n h + \frac{\lambda^2 n^2 h^2}{2}  + \mathcal{O}(h^3)
+\end{align*}
+\noindent Multiplying through by $\left(1-\dfrac{\lambda^2 n h^2}{2}\right)$ yields:
+\[
+\begin{aligned}
+\exp(\lambda n h)\left(1-\frac{\lambda^2 n h^2}{2}\right)
+&= \left(1 + \lambda n h + \frac{\lambda^2 n^2 h^2}{2} + \mathcal{O}(h^3)\right)
+   \left(1-\frac{\lambda^2 n h^2}{2}\right)\\[4pt]
+&= 1 + \lambda n h + \frac{\lambda^2 n^2 h^2}{2}
+   - \frac{\lambda^2 n h^2}{2} - \left(\dfrac{\lambda^2 n h^2}{2}\right)\left[ \lambda n h + \frac{\lambda^2 n^2 h^2}{2} + \mathcal{O}(h^3)\right]\\[4pt]
+&=  1 + \lambda n h + \frac{\lambda^2 n^2 h^2}{2}
+   - \frac{\lambda^2 n h^2}{2} + \mathcal{O}(h^3) \\[4pt]
+&= 1 + \lambda n h + \frac{\lambda^2}{2}\left(n^2 - n\right)h^2 + \mathcal{O}(h^3)\\[4pt]
+&= 1 + \lambda n h + \frac{\lambda^2 n(n-1)}{2}h^2 + \mathcal{O}(h^3)
+\end{aligned}
+\]
+\noindent Therefore it holds that 
+\[
+(1+h\lambda)^n = \exp(\lambda n h)\left(1-\frac{\lambda^2 n h^2}{2}\right)+\mathcal{O}(h^3) \quad \Box
+\]
+
+\hrulefill
+
+
+\end{document}
+
+

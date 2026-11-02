@@ -1,0 +1,550 @@
+\documentclass[]{article}
+
+\usepackage{amsmath, amsfonts, amssymb, dsfont}
+\usepackage{float}
+\usepackage{fancyhdr}
+\usepackage{fontawesome5}
+\usepackage{mathrsfs}
+\usepackage{amsmath}
+\allowdisplaybreaks 
+\usepackage{arydshln} 
+\usepackage{tikz}
+\usetikzlibrary{automata, positioning}
+
+\usepackage[utf8]{inputenc}
+
+
+\usepackage{graphicx, adjustbox, float, xcolor}
+\usepackage{tikz, pgfplots}
+\pgfplotsset{compat=1.17}
+
+\usetikzlibrary{arrows.meta, automata, positioning, decorations.pathreplacing, decorations.markings}
+\newcommand{\interior}[1]{%
+  {\kern0pt#1}^{\mathrm{o}}%
+}
+
+\usepackage{booktabs, enumitem, caption}
+
+
+\usepackage{minted} 
+\usemintedstyle{friendly}
+\setminted{fontsize=\small,autogobble,mathescape}
+
+\usepackage[a4paper,
+  includehead,includefoot,
+  top=5mm,            
+  headheight=15pt,    
+  headsep=1pt,        
+  bottom=20mm,left=40mm,right=40mm
+]{geometry}
+
+\pagestyle{fancy}
+
+
+\lhead{Ben Vickers - 304024}
+\rhead{Numerical Analysis Assignment 2}
+\setlength{\headsep}{0.4cm}
+\usepackage{titling}
+\setlength{\droptitle}{-70pt} 
+
+\title{\textbf{Numerical Analysis Assignment 2}}
+\author{Ben Vickers - 304024}
+\date{\textbf{Due: 13:59, Thursday 20 November 2025}}
+
+\begin{document}
+
+	\maketitle
+\noindent\textbf{Assessed exercise 2.1} Consider the following functions from \(\mathbb{R}\) to \(\mathbb{R}\). Prove that \(0\):
+\begin{itemize}
+  \item is a simple root of the identity (also known as linear unit) \(x \mapsto x =: \mathrm{id}_{\mathbb{R}}(x)\).
+  \item is not a simple root of \(x \mapsto x^{2}\).
+  \item is a simple root of \(x \mapsto |x|\).
+  \item is a simple root of \(x \mapsto \max\{x,2x\}\).
+  \item is not a simple root of the so-called rectified linear unit (ReLU) \(x \mapsto \max\{0,x\}\).
+\end{itemize}
+
+\noindent \textbf{SOLUTION:}
+
+\begin{enumerate}
+    \item To prove that $0$ is a simple root of the identity function $f(x)=x$ we can observe that:
+    \[
+\displaystyle \phi(x)=\frac{\|f(x)\|}{\|x-0\|}
+= \frac{\|x\|}{\|x\|}=1 > 0 \quad \text{for } x\neq 0.
+\]
+Hence,
+\[
+\displaystyle \liminf_{x\to 0}\phi(x)=\liminf_{x\to 0} 1 = 1>0
+\]
+so $0$ is a simple root of $f. \quad \Box$
+
+\item To prove that $0$ is not a simple root of $f(x) = x^2$ we can observe that:
+    \[
+\displaystyle \phi(x)=\frac{\|f(x)\|}{\|x-0\|}
+= \frac{\|x^2\|}{\|x\|}=\|x\| \quad \text{for } x\neq 0.
+\]
+Hence,
+\[
+\displaystyle \liminf_{x\to 0}\phi(x)=\liminf_{x\to 0} \|x\| =0.
+\]
+so $0$ is not a simple root of $f. \quad \Box$
+
+\item To prove that $0$ is a simple root of $f(x) = |x|$ we can observe that:
+    \[
+\displaystyle \phi(x)=\frac{\|f(x)\|}{\|x-0\|}
+= \frac{\|\,|x|\,\|}{\|x\|}=\frac{\|x\|}{\|x\|}=1 > 0 \quad \text{for } x\neq 0.
+\]
+Hence,
+\[
+\displaystyle \liminf_{x\to 0}\phi(x)=1>0
+\]
+so $0$ is a simple root of $f. \quad \Box$
+
+
+\item To prove that $0$ is a simple root of $f(x) = \max\{x,2x\}$ we can observe that:
+    \[
+\displaystyle \phi(x)=\frac{\|f(x)\|}{\|x-0\|}
+= \frac{\|\max\{x,2x\}\|}{\|x\|}=
+\begin{cases}
+\frac{\|2x\|}{\|x\|}=2 &;\, x>0\\[4pt]
+\frac{\|x\|}{\|x\|}=1 & ;\,x<0
+\end{cases}
+\qquad > 0 \quad \text{for } x\neq 0.
+\]
+Hence,
+\[
+\displaystyle \lim_{x\to 0^{+}}\phi(x)=2 \text{ and } \lim_{x\to 0^{-}}\phi(x)=1\, \implies \displaystyle \liminf_{x\to 0}\phi(x) =1 >0.
+\]
+so $0$ is a simple root of $f. \quad \Box$
+\item To prove that $0$ is not a simple root of $f(x)= \max\{0,x\}$ we can observe that:
+    \[
+\displaystyle \phi(x):=\frac{\|f(x)\|}{\|x-0\|}
+= \frac{\|\max\{0,x\}\|}{\|x\|}=
+\begin{cases}
+\frac{\|x\|}{\|x\|}=1 &;\, x>0\\[4pt]
+\frac{\|0\|}{\|x\|}=0 &;\, x<0
+\end{cases} \quad \text{for } x\neq 0.
+\]
+Hence,
+\[
+\lim_{x\to 0^{+}}\phi(x)=1 \text{ and } \lim_{x\to 0^{-}}\phi(x)=0\, \implies \displaystyle \liminf_{x\to 0}\phi(x) =0.
+\]
+so $0$ is not a simple root of $f. \quad \Box$
+
+\end{enumerate}
+
+\noindent\textbf{Assessed exercise 2.2}
+
+\begin{itemize}
+  \item Check that the trapezoidal rule is not exact on polynomials of degree two.
+  \item Check that the midpoint rule is exact on polynomials of degree less than or equal to 1.
+\item Check that the midpoint rule is not exact on polynomials of degree two.
+\end{itemize}
+
+\noindent \textbf{SOLUTION:}
+
+\begin{enumerate}
+    \item To prove that the trapezoidal rule is not exact on polynomials of degree two, we observe that given:
+    \[
+    \mathcal{T}_{\,a}^{b}[f] := (b-a)\frac{f(a)+f(b)}{2}
+    \]
+    \noindent For polynomials of degree $2$ on the interval $[a,b]$ it holds that:
+\[
+f(x)\equiv x^2 \implies \displaystyle \mathcal{E}_{\mathcal{T}_{\,a}^{b}}\,[f]  = \left[\int_a^b x^2\,dx\right]-\left[\left(b-a\right)\frac{b^2+a^2}{2}\right] = \frac{b^3-a^3}{3} - \frac{(b-a)(b^2+a^2)}{2}
+\]
+ Exactness would require:
+ \[
+\frac{b^3-a^3}{3} \equiv \frac{(b-a)(b^2+a^2)}{2}
+ \]
+ Which clearly does not hold for all values of $a,b \in \mathbb{R}$. Hence the trapezoidal rule is not exact on polynomial functions $P$ with deg$P = 2$.\newline
+
+\noindent Note that this result aligns with Theorem 4.7 which gives us:
+\[
+\displaystyle
+\left[\left|\int_{a}^{b} f(x)\,dx - \mathcal{T}_{\,a}^{b}[f]\right|\right]_{f\in P_2}
+\leq \frac{1}{12}\,\|f''\|_{L^\infty}\,(b-a)^{3} = \frac{\left(b-a\right)^3}{6} \neq 0 \, \, ;\, b\neq a.
+\]
+
+\item To prove that the midpoint rule is exact on polynomials of degree less than or equal to 1, we observe that given:
+\[
+\displaystyle \mathcal{M}_{a}^{b}[f] := (b-a)\,f\left(\frac{a+b}{2}\right)
+\]
+We have
+\begin{itemize}
+    \item For polynomials of degree 0 on the interval $[a,b]$ it holds that:
+\[
+f(x) \equiv 1 \implies \displaystyle \mathcal{E}_{\mathcal{M}_{a}^{b}}\,[f]   = \left[\int_a^b 1\,dx\right]-\left[\left(b-a\right)\cdot1\right] = (b-a) - (b-a) = 0.
+\]
+   \item For polynomials of degree 1 on the interval $[a,b]$ it holds that:
+\[
+f(x) \equiv x \implies \displaystyle \mathcal{E}_{\mathcal{M}_{a}^{b}}\,[f]   = \left[\int_a^b x\,dx\right]-\left[\left(b-a\right)\cdot\left(\frac{a+b}{2}\right)\right] = \frac{b^2-a^2}{2}-\frac{b^2-a^2}{2} = 0.
+\]
+\end{itemize}
+\noindent Hence, for polynomial functions with deg$P\leq1$, the midpoint rule is exact.\newline
+
+\noindent Note that this result aligns with Theorem 4.7 which gives us:
+\[
+\displaystyle
+\left[\left|\int_{a}^{b} f(x)\,dx - \mathcal{M}_{a}^{b}[f]\right|\right]_{f\in P_1}
+\leq \frac{1}{24}\,\|f''\|_{L^\infty}\,(b-a)^{3} = \frac{1}{24}\cdot0\cdot (b-a)^3 = 0.
+\]
+
+\item To prove that the midpoint rule is not exact on polynomials of degree two, we observe that given:
+\[
+\displaystyle \mathcal{M}_{a}^{b}[f] := (b-a)\,f\left(\frac{a+b}{2}\right)
+\]
+  \noindent For polynomials of degree $2$ on the interval $[a,b]$ it holds that:
+\[
+f(x)\equiv x^2 \implies \displaystyle \mathcal{E}_{\mathcal{M}_{a}^{b}}\,[f]  = \left[\int_a^b x^2\,dx\right]-\left[\left(b-a\right)\left(\frac{a+b}{2}\right)^2\right] = \frac{b^3-a^3}{3} - \frac{(b-a)(a+b)^2}{4}.
+\]
+Exactness would require:
+\[
+\frac{b^3-a^3}{3} \equiv  \frac{(b-a)(a+b)^2}{4}.
+\]
+
+Which clearly does not hold for all values of $a,b \in \mathbb{R}$. Hence the midpoint rule is not not exact on polynomial functions $P$ with deg$P = 2$.\newline
+
+\noindent Note that this result aligns with Theorem 4.7 which gives us:
+\[
+\displaystyle
+\left[\left|\int_{a}^{b} f(x)\,dx - \mathcal{M}_{a}^{b}[f]\right|\right]_{f\in P_2}
+\leq \frac{1}{24}\,\|f''\|_{L^\infty}\,(b-a)^{3} = \frac{\left(b-a\right)^3}{12} \neq 0 \, \, ;\, b\neq a.
+\]
+\end{enumerate}
+
+\noindent\textbf{Assessed exercise 2.3}
+We saw in lectures that, by using a Lagrange interpolation based quadrature with \(n+1\) points, we are able to exactly integrate polynomials up to order \(n\).
+However it was seen that with the three points \(a,\ \frac{a+b}{2}, \text{ and } b\), that is \(n=2\), it was possible to integrate a third order polynomial. This is because the points were conveniently chosen.
+
+Here we will work out how to choose four points so that we can integrate fourth order polynomials.
+Assuming that the points are given by \(a\), the symmetric points \(\frac{a+b}{2}\pm r\), and \(b\), where \(r\in\left(0,\frac{b-a}{2}\right)\) is to be determined.
+
+\begin{enumerate}
+  \item Calculate the Lagrange polynomials associated to this.
+  \item Given that the weights associated to the quadrature are given by
+  \[
+  \omega_0=\omega_3=\frac{(b-a)^3-12r^2(b-a)}{6\left((b-a)^2-4r^2\right)},
+  \qquad
+  \omega_1=\omega_2=\frac{(b-a)^3}{3\left((b-a)^2-4r^2\right)},
+  \tag{1}
+  \]
+  show that the quadrature is exact on polynomials of order four or less when $  r=\frac{b-a}{2\sqrt{5}}$.
+  \item Check if it is exact on fifth order polynomials; for simplicity, set \(a=-1\) and \(b=1\).
+\end{enumerate}
+
+\noindent \textbf{SOLUTION:}
+
+\begin{enumerate}
+    \item To calculate the Lagrange polynomials, we begin by denoting:
+    \[
+\displaystyle
+x_0=a,\qquad
+x_1=\frac{a+b}{2}-r,\qquad
+x_2=\frac{a+b}{2}+r,\qquad
+x_3=b.
+\]
+\noindent Then we apply the formula to compute the Lagrange polynomials: 
+\[
+\displaystyle l_i(x) =\prod_{\substack{j=0 \\ j \neq i}}^{n} \frac{x - x_j}{x_i - x_j}.
+\]
+Which yields:
+\begin{align*}
+l_0(x) &= \begin{aligned}[t]
+\prod_{j\ne 0}\frac{x-x_j}{x_0-x_j}
+&= \frac{x-\left(\frac{a+b}{2}-r\right)}{a-\left(\frac{a+b}{2}-r\right)}
+\cdot
+\frac{x-\left(\frac{a+b}{2}+r\right)}{a-\left(\frac{a+b}{2}+r\right)}
+\cdot
+\frac{x-b}{a-b}\\
+&= \frac{x-\left(\frac{a+b}{2}-r\right)}{\left(\frac{a-b}{2}+r\right)}
+\cdot
+\frac{x-\left(\frac{a+b}{2}+r\right)}{\left(\frac{a-b}{2}-r\right)}
+\cdot
+\frac{x-b}{a-b}\\
+&= \frac{
+\left(x-\left(\frac{a+b}{2}-r\right)\right)
+\left(x-\left(\frac{a+b}{2}+r\right)\right)
+(x-b)
+}{
+(a-b)\left(\left(\frac{a-b}{2}\right)^{2}-r^{2}\right)
+}
+\end{aligned}
+\\[8pt]
+l_1(x) &= \begin{aligned}[t]
+\prod_{j\ne 1}\frac{x-x_j}{x_1-x_j}
+&= \frac{x-a}{\left(\frac{a+b}{2}-r\right)-a}
+\cdot
+\frac{x-\left(\frac{a+b}{2}+r\right)}{\left(\frac{a+b}{2}-r\right)-\left(\frac{a+b}{2}+r\right)}
+\cdot
+\frac{x-b}{\left(\frac{a+b}{2}-r\right)-b}\\
+&= \frac{x-a}{\left(\frac{b-a}{2}-r\right)}
+\cdot
+\frac{x-\left(\frac{a+b}{2}+r\right)}{-2r}
+\cdot
+\frac{x-b}{\left(\frac{a-b}{2}-r\right)}\\
+&= \frac{
+(x-a)\left(x-\left(\frac{a+b}{2}+r\right)\right)(x-b)
+}{
+2r\left(\left(\frac{b-a}{2}\right)^{2}-r^{2}\right)
+}
+\end{aligned}
+\\[8pt]
+l_2(x) &= \begin{aligned}[t]
+\prod_{j\ne 2}\frac{x-x_j}{x_2-x_j}
+&= \frac{x-a}{\left(\frac{a+b}{2}+r\right)-a}
+\cdot
+\frac{x-\left(\frac{a+b}{2}-r\right)}{\left(\frac{a+b}{2}+r\right)-\left(\frac{a+b}{2}-r\right)}
+\cdot
+\frac{x-b}{\left(\frac{a+b}{2}+r\right)-b}\\
+&= \frac{x-a}{\left(\frac{b-a}{2}+r\right)}
+\cdot
+\frac{x-\left(\frac{a+b}{2}-r\right)}{2r}
+\cdot
+\frac{x-b}{\left(\frac{a-b}{2}+r\right)}\\
+&= -\frac{
+(x-a)\left(x-\left(\frac{a+b}{2}-r\right)\right)(x-b)
+}{
+2r\left(\left(\frac{b-a}{2}\right)^{2}-r^{2}\right)
+}
+\end{aligned}
+\\[8pt]
+l_3(x) &= \begin{aligned}[t]
+\prod_{j\ne 3}\frac{x-x_j}{x_3-x_j}
+&= \frac{x-a}{b-a}
+\cdot
+\frac{x-\left(\frac{a+b}{2}-r\right)}{b-\left(\frac{a+b}{2}-r\right)}
+\cdot
+\frac{x-\left(\frac{a+b}{2}+r\right)}{b-\left(\frac{a+b}{2}+r\right)}\\
+&= \frac{x-a}{b-a}
+\cdot
+\frac{x-\left(\frac{a+b}{2}-r\right)}{\left(\frac{b-a}{2}+r\right)}
+\cdot
+\frac{x-\left(\frac{a+b}{2}+r\right)}{\left(\frac{b-a}{2}-r\right)}\\
+&= \frac{
+(x-a)\left(x-\left(\frac{a+b}{2}-r\right)\right)\left(x-\left(\frac{a+b}{2}+r\right)\right)
+}{
+(b-a)\left(\left(\frac{b-a}{2}\right)^{2}-r^{2}\right)
+}
+\end{aligned}
+\end{align*}
+
+\noindent Note as one would expect, integrating our above obtained Lagrange Polynomials: \newline$\displaystyle \int_a^b l_i(x)dx \,;\,i=0,1,2,3$ in WolframAlpha returns the provided values of $\omega_i:$
+\[
+\omega_0=\omega_3=\frac{(b-a)^3-12r^2(b-a)}{6\left((b-a)^2-4r^2\right)},
+\qquad
+\omega_1=\omega_2=\frac{(b-a)^3}{3\left((b-a)^2-4r^2\right)},
+\]
+
+\item To prove that the quadrature is exact on polynomials of order four or less with $r = \frac{b-a}{2\sqrt{5}}$ we need to show that for $k=0,1,2,3,4$:
+\[
+\int_a^b x^k\,dx
+=\int_a^b \sum_{i=0}^3 x_i^k\,l_i(x)\,dx
+=\sum_{i=0}^3 x_i^k \int_a^b l_i(x)\,dx
+=\sum_{i=0}^3 \omega_i x_i^k = Q[f].
+\]
+With
+\[
+x_0=a,\qquad x_1=\frac{a+b}{2}-r,\qquad x_2=\frac{a+b}{2}+r,\qquad x_3=b
+\]
+\begin{itemize}
+    \item 
+    For $k=0$ we have:
+\[
+\int_a^b 1\,dx=b-a,
+\qquad
+Q[1]=\omega_0+\omega_1+\omega_2+\omega_3=2\omega_0+2\omega_1.
+\]
+Evaluating $\omega_0+\omega_1$ yields:
+\begin{align*}
+\omega_0+\omega_1
+&=\frac{(b-a)^3-12r^2(b-a)}{6\left((b-a)^2-4r^2\right)}
+  +\frac{(b-a)^3}{3\left((b-a)^2-4r^2\right)}\\
+&=\frac{(b-a)^3-12r^2(b-a)+2(b-a)^3}{6\left((b-a)^2-4r^2\right)}\\
+&=\frac{3(b-a)^3-12r^2(b-a)}{6\left((b-a)^2-4r^2\right)}
+=\frac{(b-a)\left(3(b-a)^2-12r^2\right)}{6\left((b-a)^2-4r^2\right)}\\
+&=\frac{(b-a)\cdot 3\left((b-a)^2-4r^2\right)}{6\left((b-a)^2-4r^2\right)}
+=\frac{b-a}{2}.
+\end{align*}
+Hence \(Q[1]=2(\omega_0+\omega_1)=b-a=\int_a^b 1\,dx\).\newline 
+\item For $k=1$ we have:
+\[
+\int_a^b x\,dx=\frac{b^2-a^2}{2}.
+\]
+\begin{align*}
+Q[x] &= \omega_0x_0 + \omega_1x_1 + \omega_2x_2+\omega_3x_3 \\ 
+&=\omega_0 a+\omega_1\left(\frac{a+b}{2}-r\right)+\omega_2\left(\frac{a+b}{2}+r\right)+\omega_3 b\\
+&=\omega_0 a+\omega_1\left(\frac{a+b}{2}-r\right)+\omega_1\left(\frac{a+b}{2}+r\right)+\omega_0 b\\
+&=(\omega_0+\omega_1)(a+b)
+=\underbrace{\left(\frac{b-a}{2}\right)}_{\text{As per $k=0$}}(a+b)
+=\frac{b^2-a^2}{2}
+\end{align*}
+Hence \(Q[x]= \omega_0x_0 + \omega_1x_1 + \omega_2x_2+\omega_3x_3=\frac{b^2-a^2}{2}=\int_a^b x\,dx\).\newline
+
+\item For $k=2$ we have:
+\[
+\int_a^b x^2\,dx=\frac{b^3-a^3}{3}.
+\]
+
+\begin{align*}
+Q[x^2] 
+&=\omega_0 x_0^2 +\omega_1x_1^2+\omega_2x_2^2+\omega_3 x_3^2\\
+&=\omega_0 a^2+\omega_1\left(\frac{a+b}{2}-r\right)^2+\omega_1\left(\frac{a+b}{2}+r\right)^2+\omega_0 b^2\\
+&=\omega_0(a^2+b^2)+\omega_1\left(\left(\frac{a+b}{2}-r\right)^2+\left(\frac{a+b}{2}+r\right)^2\right)\\
+&=\omega_0(a^2+b^2)+\omega_1\left(2\left(\frac{a+b}{2}\right)^2+2r^2\right)\\
+&=\omega_0(a^2+b^2)+\omega_1\left(\frac{(a+b)^2}{2}+2r^2\right)\\
+&=\omega_0\left(\frac{(a+b)^2+(b-a)^2}{2}\right)+\omega_1\left(\frac{(a+b)^2}{2}+2r^2\right)\\
+&=\frac{(b-a)\left((b-a)^2-12r^2\right)}{6\left((b-a)^2-4r^2\right)}\cdot\frac{(a+b)^2+(b-a)^2}{2} +\frac{(b-a)^3}{3\left((b-a)^2-4r^2\right)}\left(\frac{(a+b)^2}{2}+2r^2\right)\\
+&=\frac{(b-a)}{6\left((b-a)^2-4r^2\right)}
+\left(
+\frac{\left((b-a)^2-12r^2\right)\left((a+b)^2+(b-a)^2\right)}{2}
++2(b-a)^2\left(\frac{(a+b)^2}{2}+2r^2\right)
+\right)\\
+&=\frac{(b-a)}{12\left((b-a)^2-4r^2\right)}
+\left(
+\left((b-a)^2-12r^2\right)\left((a+b)^2+(b-a)^2\right)
++2(b-a)^2\left((a+b)^2+4r^2\right)
+\right)\\
+&=\frac{(b-a)}{12\left((b-a)^2-4r^2\right)}
+\left(
+\begin{aligned}
+&(b-a)^2(a+b)^2+(b-a)^4-12r^2(a+b)^2-12r^2(b-a)^2\\
+&\quad+2(b-a)^2(a+b)^2+8(b-a)^2 r^2
+\end{aligned}
+\right)\\
+&=\frac{(b-a)}{12\left((b-a)^2-4r^2\right)}
+\left(
+3(b-a)^2(a+b)^2+(b-a)^4-12r^2(a+b)^2-4(b-a)^2 r^2
+\right)\\
+&=\frac{(b-a)}{12\left((b-a)^2-4r^2\right)}
+\left(
+\left((b-a)^2-4r^2\right)\left(3(a+b)^2+(b-a)^2\right)
+\right)\\
+&=\frac{(b-a)}{12}\left(3(a+b)^2+(b-a)^2\right)
+=\frac{(b-a)}{12}\left(3(a^2+2ab+b^2)+a^2-2ab+b^2\right)\\
+&=\frac{(b-a)}{12}\left(4a^2+4ab+4b^2\right)
+=\frac{(b-a)}{3}\left(a^2+ab+b^2\right)
+=\frac{b^3-a^3}{3}.
+\end{align*}
+
+
+Hence \(Q[x^2]=\omega_0 x_0^2 +\omega_1x_1^2+\omega_2x_2^2+\omega_3 x_3^2=\frac{b^3-a^3}{3}=\int_a^b x^2\,dx\).\newline
+
+\item For $k=3$ we have:
+\[
+\int_a^b x^3\,dx=\frac{b^4-a^4}{4}.
+\]
+
+\begin{align*}
+Q[x^3]
+&=\omega_0 x_0^3+\omega_1 x_1^3+\omega_2 x_2^3+\omega_3 x_3^3\\
+&=\omega_0 a^3+\omega_1\left(\frac{a+b}{2}-r\right)^3+\omega_1\left(\frac{a+b}{2}+r\right)^3+\omega_0 b^3\\
+&=\omega_0(a^3+b^3)+\omega_1\left(\left(\frac{a+b}{2}-r\right)^3+\left(\frac{a+b}{2}+r\right)^3\right)\\
+&=\omega_0(a^3+b^3)+\omega_1\left(
+\begin{aligned}
+&\left(\frac{a+b}{2}\right)^3-3\left(\frac{a+b}{2}\right)^2 r+3\left(\frac{a+b}{2}\right) r^2-r^3\\
+&\qquad\qquad\qquad\,\,
++\left(\frac{a+b}{2}\right)^3+3\left(\frac{a+b}{2}\right)^2 r+3\left(\frac{a+b}{2}\right) r^2+r^3
+\end{aligned}
+\right)\\
+&=\omega_0(a^3+b^3)+\omega_1\left(
+2\left(\frac{a+b}{2}\right)^3+\left(-3+3\right)\left(\frac{a+b}{2}\right)^2 r
++6\left(\frac{a+b}{2}\right) r^2+\left(-1+1\right)r^3
+\right)\\
+&=\omega_0(a^3+b^3)+\omega_1\left(2\left(\frac{a+b}{2}\right)^3+6\left(\frac{a+b}{2}\right)r^2\right)\\
+&=\omega_0(a^3+b^3)+\omega_1\left(\frac{(a+b)^3}{4}+3(a+b)r^2\right)\\
+&=\frac{(b-a)\left((b-a)^2-12r^2\right)}{6\left((b-a)^2-4r^2\right)}(a^3+b^3)
++\frac{(b-a)^3}{3\left((b-a)^2-4r^2\right)}\left(\frac{(a+b)^3}{4}+3(a+b)r^2\right)\\
+& \text{Let } s=a+b,\ d=b-a,\ \implies a=\frac{s-d}{2},\ b=\frac{s+d}{2}\\
+& \implies \displaystyle 
+\frac{d\,(d^{2}-12r^{2})}{6\,(d^{2}-4r^{2})}(a^{3}+b^{3})
++\frac{d^{3}}{3\,(d^{2}-4r^{2})}\!\left(\frac{s^{3}}{4}+3sr^{2}\right)\\
+& a^3 + b^3 =\frac{(s-d)^3+(s+d)^3}{8}=\frac{2s^3+6sd^2}{8} = \frac{s(s^2+3d^2)}{4}\\
+&\implies \frac{d\,(d^{2}-12r^{2})}{6\,(d^{2}-4r^{2})}\cdot\frac{s\,(s^{2}+3d^{2})}{4}
++\frac{d^{3}}{3\,(d^{2}-4r^{2})}\!\left(\frac{s^{3}}{4}+3sr^{2}\right)\\
+\displaystyle
+&=\frac{s}{24\,(d^{2}-4r^{2})}\left[d\,(d^{2}-12r^{2})(s^{2}+3d^{2})
++8d^{3}\!\left(\frac{s^{2}}{4}+3r^{2}\right)\right]\\
+\displaystyle
+&=\frac{s}{24\,(d^{2}-4r^{2})}\left[d^{3}s^{2}+3d^{5}-12ds^{2}r^{2}-36d^{3}r^{2}
++2d^{3}s^{2}+24d^{3}r^{2}\right]\\
+\displaystyle
+&=\frac{s}{24\,(d^{2}-4r^{2})}\left[3d^{3}s^{2}+3d^{5}-12ds^{2}r^{2}-12d^{3}r^{2}\right]\\
+\displaystyle
+&=\frac{s}{24\,(d^{2}-4r^{2})}\cdot 3d\left[d^{2}s^{2}+d^{4}-4s^{2}r^{2}-4d^{2}r^{2}\right]\\
+\displaystyle
+&=\frac{s}{24\,(d^{2}-4r^{2})}\cdot 3d\,(s^{2}+d^{2})(d^{2}-4r^{2})\\
+\displaystyle
+&=\frac{sd\,(s^{2}+d^{2})}{8}
+=\frac{(a+b)(b-a)\left((a+b)^{2}+(b-a)^{2}\right)}{8}\\
+\displaystyle
+&=\frac{(b^{2}-a^{2})\left(a^{2}+b^{2}\right)}{4}
+=\frac{b^{4}-a^{4}}{4}.
+\end{align*}
+
+Hence \(Q[x^3]=\omega_0 x_0^3 +\omega_1x_1^3+\omega_2x_2^3+\omega_3 x_3^3=\frac{b^4-a^4}{4}=\int_a^b x^3\,dx\).\newline
+
+\item For $k=4$ we have: \(\displaystyle \int_a^b x^4\,dx=\frac{b^5-a^5}{5}\).
+\begin{align*}
+Q[x^4]
+&=\omega_0 x_0^4+\omega_1 x_1^4+\omega_2 x_2^4+\omega_3 x_3^4\\
+&=\omega_0 a^4+\omega_1\left(\frac{a+b}{2}-r\right)^{\!4}
++\omega_1\left(\frac{a+b}{2}+r\right)^{\!4}
++\omega_0 b^4\\
+&=\omega_0(a^4+b^4)+\omega_1\!\left[\left(\frac{a+b}{2}-r\right)^{\!4}+\left(\frac{a+b}{2}+r\right)^{\!4}\right]\\
+&=\omega_0(a^4+b^4)+\omega_1\!\left(2\left(\frac{a+b}{2}\right)^{\!4}+12\left(\frac{a+b}{2}\right)^{\!2}r^{2}+2r^{4}\right)\\
+&=\omega_0(a^4+b^4)+\omega_1\!\left(\frac{(a+b)^4}{8}+3(a+b)^2r^{2}+2r^{4}\right)\\[2pt]
+&=\frac{(b-a)\left((b-a)^2-12r^2\right)}{6\left((b-a)^2-4r^2\right)}\,(a^4+b^4)
+\;+\;\frac{(b-a)^3}{3\left((b-a)^2-4r^2\right)}
+\left(\frac{(a+b)^4}{8}+3(a+b)^2r^{2}+2r^{4}\right)\\
+& \text{Let } s=a+b,\ d=b-a,\ \implies a=\frac{s-d}{2},\ b=\frac{s+d}{2}\\
+&a^4+b^4=\frac{(s-d)^{4}+(s+d)^{4}}{16}
+=\frac{s^{4}+6s^{2}d^{2}+d^{4}}{8}\\
+&\implies \frac{1}{24(d^{2}-4r^{2})}\left[\frac{1}{2}d(d^{2}-12r^{2})(s^{4}+6s^{2}d^{2}+d^{4}) +d^{3}s^{4}+24d^{3}s^{2}r^{2}+16d^{3}r^{4}\right]\\
+&\text{At this point note:}\\
+&\displaystyle \frac{b^{5}-a^{5}}{5}=\frac{1}{5}\left[\left(\frac{s+d}{2}\right)^{5}-\left(\frac{s-d}{2}\right)^{5}\right]\\
+&\text{And: }\displaystyle (s\pm d)^{5} = s^{5} \pm 5s^{4}d+10s^{3}d^{2}\pm 10s^{2}d^{3}+5sd^{4}\pm d^{5}\\
+&\implies \displaystyle (s+d)^{5}-(s-d)^{5}
+=2\left(5s^{4}d+10s^{2}d^{3}+d^{5}\right)\\
+&\implies \frac{b^{5}-a^{5}}{5} = \frac{1}{80}\left(5ds^4+10d^3s^2+d^5\right)\\
+&\text{By WolframAlpha our previous expression evaluates to:}\\
+&s^2\left(\frac{d^3}{8}+\frac{ds^2}{16}\right) + d^3\left(\frac{d^2}{48}-\frac{r^2}{6}\right)\\
+&=\frac{1}{80}\left(5ds^{4}+10d^{3}s^{2}+d^{5}\right)
++\frac{d^{3}}{120}\,(d^{2}-20r^{2})\\
+&=\frac{b^{5}-a^{5}}{5}+\frac{(b-a)^{3}}{120}\left((b-a)^{2}-20r^{2}\right)\\
+&\text{Hence to obtain exactness on fourth order polynomials, we require }:\\
+&(b-a)^{2}=20r^{2} \implies r=\frac{b-a}{2\sqrt{5}}\\
+&\text{I.e. given } r=\frac{b-a}{2\sqrt{5}}, \text{ it holds that: }\\
+&Q[x^4]=\omega_0 x_0^4 +\omega_1x_1^4+\omega_2x_2^4+\omega_3 x_3^4=\frac{b^5-a^5}{5}=\int_a^b x^4\,dx
+\end{align*}
+\end{itemize}
+Since we have now shown that the quadrature is exact on the monomials $x^k ;k=0,1,2, 3$ and, provided that $r = \frac{b-a}{2\sqrt{5}}$, also for $k=4$. It therefore holds by the linearity of the integral operator that the quadrature is exact on all polynomials of order four or less. I.e.:
+\[
+\text{Given }r=\frac{b-a}{2\sqrt{5}}, \, a,b\in \mathbb{R}, f\in \mathcal{P}_4\,:\, \mathcal{E}_{\mathcal{Q}_{a}^{b}}\,[f] = 0
+\]
+
+
+\item To check if the quadrature is exact on fifth order polynomials with $a = -1$ and $b = 1$, we can repeat the checks conducted above for $k=0,1,2,3,4$ to the case $k=5$  with $a = -1$ and $b = 1$.\newline
+
+
+For $k=5$ we have:
+\[
+\int_{-1}^1 x^5\,dx=\frac{1-1}{6} = 0.
+\]
+
+\begin{align*}
+Q[x^5]
+&=\omega_0 x_0^5+\omega_1 x_1^5+\omega_2 x_2^5+\omega_3 x_3^5\\
+&=\omega_0 a^5+\omega_1\left(\frac{a+b}{2}-r\right)^{\!5}
++\omega_1\left(\frac{a+b}{2}+r\right)^{\!5}
++\omega_0 b^5\\
+&=\omega_0(1^5+(-1)^5)+\omega_1\!\left[\left(\frac{-1+1}{2}-r\right)^{\!5}+\left(\frac{-1+1}{2}+r\right)^{\!5}\right]\\
+&=0 +\omega_1\!\left[\left(0-r\right)^{\!5}+\left(0+r\right)^{\!5}\right]\\
+&=\omega_1\!\left[-r^{\!5}+r^{\!5}\right] = 0
+\end{align*}
+Hence \(Q[x^5]=\omega_0 x_0^5 +\omega_1x_1^5+\omega_2x_2^5+\omega_3 x_3^5=\frac{1^6-(-1)^6}{6}=0=\int_{-1}^1 x^5\,dx\).\newline
+
+\noindent Meaning the quadrature is indeed exact on fifth order polynomials. (Since we can rescale the given interval $[-1,1]$ and achieve the result generally $\forall \, I \in \mathbb{R}$).
+\end{enumerate}
+\hrulefill
+\end{document}
+
+
