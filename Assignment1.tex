@@ -1,0 +1,352 @@
+\documentclass[]{article}
+
+\usepackage{amsmath, amsfonts, amssymb, dsfont}
+\usepackage{float}
+\usepackage{fancyhdr}
+\usepackage{fontawesome5}
+
+\usepackage{arydshln} 
+\usepackage{tikz}
+\usetikzlibrary{automata, positioning}
+
+\usepackage[utf8]{inputenc}
+
+\usepackage{graphicx, adjustbox, float, xcolor}
+
+\usepackage{tikz, pgfplots}
+\pgfplotsset{compat=1.17}
+
+\usetikzlibrary{arrows.meta, automata, positioning, decorations.pathreplacing, decorations.markings}
+\newcommand{\interior}[1]{%
+  {\kern0pt#1}^{\mathrm{o}}%
+}
+
+\usepackage{booktabs, enumitem, caption}
+
+\usepackage{minted} 
+\usemintedstyle{friendly}
+\setminted{fontsize=\small,autogobble,mathescape}
+
+\usepackage[a4paper,
+  includehead,includefoot,
+  top=5mm,            
+  headheight=15pt,    
+  headsep=6pt,        
+  bottom=20mm,left=40mm,right=40mm
+]{geometry}
+
+\pagestyle{fancy}
+
+\lhead{Ben Vickers - 304024}
+\rhead{Numerical Analysis Assignment 1}
+\setlength{\headsep}{0.4cm} 
+\usepackage{titling}
+\setlength{\droptitle}{-40pt}
+\title{\textbf{Numerical Analysis Assignment 1}}
+\author{Ben Vickers - 304024}
+\date{\textbf{Due: 13:59, Thursday 30 October 2025}}
+
+\begin{document}
+
+	\maketitle
+\noindent \section*{Assessed exercise 1.1 (Lipschitz condition)}
+\begin{enumerate}
+\item Suppose that $g\colon D \to \mathbb{R}$ is differentiable with $g'$ bounded in $D$. Show that $g$ is Lipschitz differentiable. \textit{Hint:} Use the mean value theorem in integral form:
+\[
+\displaystyle g(y)-g(x)=(y-x)\int_{0}^{1} g'(x+s(y-x))\,ds,\tag{1}
+\]
+and basic properties of the integral:
+\[
+\displaystyle \left|\int f\right| \le \int |f|,\tag{2}
+\]
+\[
+\displaystyle f \le h \;\implies\; \int f \le \int h.\tag{3}
+\]
+
+\noindent \textbf{SOLUTION:}
+
+By the MVT in integral form:
+\[
+\displaystyle g(y)-g(x)=(y-x)\int_{0}^{1} g'(x+s(y-x))\,ds \iff \displaystyle \frac{g(y)-g(x)}{y-x}=\int_{0}^{1} g'(x+s(y-x))\,ds
+\]
+Taking norms:
+\[
+ \displaystyle \frac{\left|g(y)-g(x)\right|}{\left|y-x\right|}= \left| \int_{0}^{1} g'(x+s(y-x))\,ds \right|
+\]
+As hinted:
+\[
+\left| \int_{0}^{1} g'(x+s(y-x))\,ds \right| \leq \int_{0}^{1}  \left|g'(x+s(y-x)) \right| ds
+\]
+Now because know $g$ is differentiable and $g'$ is bounded in $D$, that means $ \forall x \in D,\, g'(x)$ exists and $\exists L > 0$ such that $\left|g'(x)\right| \leq L := \displaystyle\sup_{x\in D}\left|g'(x)\right|.$ Assuming $D$ is convex so $x+s(y-x) \in D \, \forall s\in[0,1]$, the above yields:
+\[
+ \int_{0}^{1}  \left|g'(x+s(y-x)) \right| ds \leq  \int_{0}^{1} L\, ds = L
+\]
+So we have shown that there exists some $L>0$ such that $\forall x,y \in D$:
+\[
+\frac{\left|g(y)-g(x)\right|}{\left|y-x\right|} \leq L \iff \left|g(y)-g(x)\right| \leq L\left|y-x\right|
+\]
+Which proves that $g$ is Lipschitz on $D. \quad \Box$ 
+
+\item Deduce that if $g \in C^{1}(D)$ and $C$ is a compact, (i.e.\ closed and bounded) \textbf{convex}, subset of $D$, \textbf{with non-empty interior} then $g|_{C} \in \operatorname{Lip}(C)$ and
+\[
+\displaystyle |g|_{\operatorname{Lip} C}=\sup_{x\in C}\|g'(x)\|=\max_{x\in C}\|g'(x)\|.\tag{4}
+\]
+(The last equality is a formulaic way of saying that the least upper bound is achieved by some point, i.e.\ $\exists\,x^{*}\in C$ with $\|g'(x^{*})\|=\sup_{x\in C}\|g'(x)\|$.)
+\[\]
+\noindent \textbf{SOLUTION:}
+
+We are given that $g: D\to Y \, : \, g\in C^1(D)$ so $g'$ is continuous on D and thus $\|g'\| \in C^0(D) \implies \|g'\| \in C^0(C)$.\newline
+
+Since $C \subset D $ is compact and $\|g'\| \in C^0(C)$, by the Extreme Value Theorem, we have that $\|g'\|$ is bounded on $C$ and therefore, \[\exists x^* \in C \text{ with } \|g'(x^*)\|=\displaystyle \sup_{x\in C} \|g'(x)\| =\displaystyle \max_{x\in C} \|g'(x)\|  := M < \infty.\]
+I.e. $\|g'\|$ attains its maximum on $C$.
+From this we can apply our previous result:
+\[\frac{\left\|g(y)-g(x)\right\|}{\left\|y-x\right\|} \leq \int_{0}^{1}  \left\|g'(x+s(y-x)) \right\| ds\] 
+
+Since we have assumed that $C$ is convex, we have $x+s(y-x) \in C \, \forall \, s\in[0,1]$
+\[
+\implies \int_{0}^{1}  \left\|g'(x+s(y-x)) \right\| ds \leq \int_0^1M \,ds=M \]
+\[\implies \frac{\left\|g(y)-g(x)\right\|}{\left\|y-x\right\|} \leq M\,\, \forall x \neq y \in C
+\]
+
+
+Therefore, $g|_C \in \text{Lip}(C)$ and hence:
+\[
+\sup_{x \neq y \in C} \frac{\|g(x) - g(y) \|}{\|x-y\|}=\left| g_{|C}\right|_{\text{Lip}(C)} := L \leq M = \max_{x\in C} \|g'(x)\| = \sup_ {x\in C} \|g'(x)\|
+\]
+
+Now because we have shown $g$ to be Lipschitz, it holds that \[\frac{\left\|g(y)-g(x)\right\|}{\left\|y-x\right\|} \leq L\]
+
+Next we can fix some $x ,y \in \interior{C}$, $x\neq y$ and define $y_t := x + t(y-x)$ with $t \in (0,1]$ to ensure $x \neq y_t \, \forall \, t$. I.e. we let $y_t\in \interior{C}$ to be the line segment between any two distinct values $x$ and $y$ in the interior of $C$. Note that by convexity of $C,\,  y_t \in C \, \forall t\in (0,1]$. Because we have shown $g$ to be Lipschitz, it holds that:
+\[
+\frac{\left\|g(y_t)-g(x)\right\|}{\left\|y_t-x\right\|} =
+\frac{\left\|g(x+t(y-x))-g(x)\right\|}{\left\|x + t(y-x)-x\right\|} = \frac{\left\|g(x + t(y-x))-g(x)\right\|}{t\| y-x \|}\leq L\]
+
+Since we have that $g\in C^1(D)$, we can take $\displaystyle \lim_{t\to 0^+}$ giving:
+\[
+\left\|g'(x)\left[\frac{y-x}{\|y-x\|}\right]\right\| \leq L
+\]
+
+Now, for every $x,y\in \interior{C}$, taking the supremum over all directions of the unit vector $h:=\frac{y-x}{\|y-x\|}$ gives:
+
+\[
+\sup_{\|h\|=1}\|g'(x)[h]\| = \|g'(x)\| \leq L \quad \forall x\in \interior{C}
+\]
+\[
+\implies \sup_{x\in \interior{C}}\|g'(x)\| \leq L
+\]
+
+Then, fixing $x \in \partial C \text{ and choosing any } \tilde{x} \in \interior{C}, \text{ we define }x_k :=\tilde{x}+k(x-\tilde{x});k\in[0,1) \text{ with } x_k\in \interior{C} \, \forall k\in [0,1) $ by convexity of $C$. Then because $x_k \to x$ as $k \to 1^-$, from the above interior case and continuity of $\|g'\|$ on $C$, we have that:
+\[
+\|g'(x_k)\| \leq L \quad \forall x\in \partial{C}, k \in [0,1)\]
+\[
+\implies \|g'(x)\|=\displaystyle \lim_{k\to 1^-} \|g'(x_k)\|  \leq L \quad \forall x\in \partial{C}
+\]
+\[
+\implies \sup_{x\in \partial{C}}\|g'(x)\| \leq L
+\]
+
+Combining the above results yields $\displaystyle \sup_{x\in C}\|g'(x)\| \leq L$ since $\partial C \, \cup \, \interior C = C$.
+
+Again combining this with our previously obtained inequality gives:
+
+\[
+\sup_{x\in C}\|g'(x)\| \leq |g|_{\text{Lip}(C)}  = \sup_ {x\in C} \|g'(x)\|= \max_{x\in C} \|g'(x)\|
+\]
+\[
+\implies \displaystyle |g|_{\operatorname{Lip}(C)}=\sup_{x\in C}\|g'(x)\|=\max_{x\in C}\|g'(x)\|
+\quad \Box
+\]
+
+
+
+
+\item Find a function $f$ which is Lipschitz continuous on $[-1,1]$ but not differentiable at all interior points of $[-1,1]$.
+
+\noindent \textbf{SOLUTION:}
+
+Our candidate is $f(x) = |x|$ which is notably not differentiable at $x=0 \in [-1,1]$.\newline
+So we can now check whether $f(x) = |x| \in \text{Lip}([-1,1])$.\newline
+\[
+\left|f(x)-f(y)\right|  = \left||x|-|y|\right| \leq |x-y| \quad \text{by the triangle inequality.}
+\]
+\[
+\implies \left|f(x)-f(y)\right| \leq 1 \cdot |x-y| \, \forall \, x,y \, \in \, [-1,1]
+\]
+\[
+\implies f(x) = |x| \in \text{Lip}([-1,1]) \, , f \notin C^1([-1,1]).
+\]
+So, our candidate function, $f(x)=|x|$ meets the given criteria.$\quad \Box$
+
+\end{enumerate}
+
+
+\section*{Assessed exercise 1.2 (Solving a matrix equation with fixed point theory)}
+
+Let $A\in\mathbb{R}^{n\times n}$ be an invertible matrix. Suppose that $a_{ii}\neq 0$ for $i=1,\dots,n$.
+Let $D,R\in\mathbb{R}^{n\times n}$ be a decomposition of $A=D+R$ into diagonal part $D$
+\[
+D=
+\begin{pmatrix}
+a_{11} & 0      & \cdots & 0\\
+0      & a_{22} & \ddots & \vdots\\
+\vdots & \ddots & \ddots & 0\\
+0      & \cdots & 0      & a_{nn}
+\end{pmatrix}. \tag{5}
+\]
+and remainder $R$
+\[
+R=
+\begin{pmatrix}
+0      & a_{12} & \cdots & a_{1n}\\
+a_{21} & 0      & \ddots & \vdots\\
+\vdots & \ddots & \ddots & a_{n-1,n}\\
+a_{n1} & \cdots & a_{n,n-1} & 0
+\end{pmatrix}. \tag{6}
+\]
+
+Let $b\in\mathbb{R}^n$ be a given vector. Given an initial $x^{(0)}\in\mathbb{R}^n$ the Jacobi iteration constructs $x^{(k+1)}$ by recursively defining
+\[
+x^{(k+1)}=D^{-1}\bigl(b-Rx^{(k)}\bigr). \tag{7}
+\]
+
+\begin{enumerate}
+  \item In the fixed point iteration in (7), state the function $f$ such that $x^{(k+1)}=f\!\left(x^{(k)}\right)$.
+
+    \noindent \textbf{SOLUTION:}
+    \[
+    f(x)=D^{-1}\bigl(b-Rx\bigr) \, ; \, \, f:\mathbb{R}^n \to \mathbb{R}^n \quad \Box
+    \]
+
+Note that $a_{ii} \neq 0 \implies D^{-1}$ exists.
+  
+  \item Supposing that the fixed point iteration converges, to what does it converge?
+
+      \noindent \textbf{SOLUTION:}
+
+      Under the supposition that the fixed point iteration converges, we have:
+  \[
+x^* = \lim_{k\to\infty}\, x^{(k+1)} =  \lim_{k\to\infty} \,  f(x^{(k)}) =f(x^*) = D^{-1}\bigl(b-Rx^*\bigr)
+  \]
+\[
+x^* = D^{-1}\bigl(b-Rx^*\bigr) \implies Dx^*=b-Rx^*
+\]
+\[
+\implies Dx^*+Rx^*=b \implies (D+R)x^* =b
+\]
+\[
+\iff Ax^* = b \implies x^* = A^{-1}b\, ; \, x^* \in \mathbb{R}^n \quad \Box
+\]
+
+Note, we are given that $A$ is invertible so $x^*$ is well-defined and unique.
+
+We can notice that the Jacobi iteration provides an iterative method to solve $Ax=b$ where it is potentially ``expensive" to invert $A$.
+   
+  \item State a sufficient condition on the matrices $R$ and $D$ such that the iteration will converge. Hint: you might want to use Banach--Caccioppoli's theorem.
+  
+        \noindent \textbf{SOLUTION:}
+        
+     We know under Banach--Caccioppoli's theorem that $f(x)=D^{-1}\bigl(b-Rx\bigr)$ will have a \textbf{unique} fixed point $x^*$ if:
+      \begin{enumerate}
+          \item $f:X\to \mathbb{R}^n$ is a contraction on some closed subset $X \subset \mathbb{R}^n$
+          \item $x^* \in X$ such that $f(x^*) = x^*$
+      \end{enumerate}
+
+      The condition for $f$ to be a contraction on $X$ is $\exists \kappa \in [0,1)$ such that:
+      \[
+      \|f(x)-f(y)\| \leq \kappa \|x-y\| \, \, \forall \, x,y \in X.
+      \]
+      We have:
+      \[
+      \|f(x)-f(y)\| = \|D^{-1}(b-Rx) - D^{-1}(b-Ry)\| 
+      \]
+      \[
+      = \|D^{-1}R(y-x)\| = \|D^{-1}R(x-y)\|\leq \|D^{-1}R\|\cdot\|x-y\| 
+      \]
+      Which gives us that:
+        \[
+        \|f(x)-f(y)\| \leq \|D^{-1}R\|\cdot\|x-y\| 
+        \]
+
+Therefore, $f$ is a contraction on $X$ $\iff  \kappa := \|D^{-1}R\| < 1 \quad \text{        (Note that $a_{ii} \neq 0 \implies D^{-1}$ exists)
+}$\newline 
+
+Since this inequality holds $\forall \, x,y \, \in \mathbb{R}^n$ which is closed in of itself, taking $X=\mathbb{R}^n$, we have a sufficient condition for $f$ to be a contraction on $\mathbb{R}^n$.
+        
+We have already shown in $1.2.2$ that $\exists \, x^* = A^{-1}b \in \mathbb{R}^n $ such that $f(x^*) = x^*$. So by Banach-Cacciopolli, $x^*$ is the unique fixed point of $f$.
+
+Therefore, the only condition necessary to ensure this iteration will converge further to the established condition $\|D^{-1}R\| < 1$ is ensuring $x_0 \in X=\mathbb{R}^n$ which is trivially satisfied since $dom(f) = \mathbb{R}^n. \, \quad \Box$
+
+\end{enumerate}
+
+\noindent \section*{Assessed exercise 1.3 (Super linear Banach-Caccioppoli)}
+
+\begin{enumerate}
+\item Suppose $g: D \to D$ is a contraction in a closed set $D \subset \mathbb{R}$ with fixed point $x^*$. Suppose also that $g \in C^1(D)$ and $g'$ satisfies that there is $C > 0$ and $\alpha \in (0,1)$ such that 
+$$
+\| g'(x) - g'(y) \| \leq C \|x - y\|^{\alpha} \quad \text{for all } x, y \in D.
+$$
+If $g'(x^*) = 0$, then the convergence of the iteration $x_{k+1} = g(x_k)$ is super-linear with order $1 + \alpha$. Prove this statement.
+
+\noindent \textbf{SOLUTION:}
+
+We begin by denoting $e_k := x_k - x^*$ and $\epsilon_k = |e_k|$.
+
+We can also take note that because $x^*$ is a fixed point of $g$, we know $g(x^*) = x^*.$
+
+Now, by the mean value theorem in integral form, we have:
+\[
+{\epsilon}_{k+1} = |x_{k+1} - x^*| = \left|g(x_k)-g(x^*)\right| = \left|(x_k-x^*)\int_0^1 g'(x^*+s(x_k-x^*))ds \right|
+\]
+\[
+\leq |x_k-x^*| \int_0^1 \left| g'(x^*+s(x_k-x^*))  \right|ds
+\]
+
+Because we know $\exists\,C>0,\,\alpha\in(0,1)$, s.t.:
+$$
+\| g'(x) - g'(y) \| \leq C \|x - y\|^{\alpha} \quad \forall x, y \in D. \, (\text{i.e. } g' \text{ is } \alpha\text{-Holder})
+$$
+
+Then if $g'(x^*) = 0:$
+\[
+\implies \left| g'(x^*+s(x_k-x^*))  \right|= \left| g'(x^*+s(x_k-x^*))  - g'(x^*)\right|
+\] 
+\[
+\leq C |\left(x^*+s(x_k-x^*)\right) - \left(x^*\right)|^{\alpha} =  Cs^{\alpha} |\left((x_k-x^*)\right) |^{\alpha}
+\]
+
+Returning to our integral expression:
+\[
+{\epsilon}_{k+1} \leq |x_k-x^*| \int_0^1 \left| g'(x^*+s(x_k-x^*))  \right|ds =|x_k-x^*| \int_0^1 \left| g'(x^*+s(x_k-x^*))  - g'(x^*)\right|ds 
+\]
+\[
+\leq \|x_k-x^*\| \int_0^1 \left| \left(Cs^{\alpha} |\left(x_k-x^*\right) |^{\alpha}\right)\right|ds = \frac{C}{1+\alpha}|x_k-x^*|^{1+\alpha} = \frac{C}{1+\alpha} \epsilon_k^{1+\alpha}
+\]
+
+At this point we have shown that:
+\[
+\epsilon_{k+1} \leq \frac{C}{1+\alpha} \epsilon_k^{1+\alpha}
+\]
+
+However, to show that the convergence of this iteration is superlinear with rate $\alpha+1$, we need to that $\{x_k\}_{k\in \mathbb{N}}$ does indeed converge (to $x^*$). We are given that:
+\begin{enumerate}
+ \item $D \subset \mathbb{R} \text{ is closed }   $
+  \item  $g:D\to D \text{ is a contraction,}$
+ \subitem \hspace{-0.8cm} $ \text{i.e.  } \exists \kappa \in [0,1) \text{ with } |g(x)-g(y)|\le \kappa\,|x-y| \quad \forall x,y\in D \iff |g|_{\text{Lip}(D)} = \kappa\text{}$
+  \item $g \text{ has a fixed point, }x^*.$
+\end{enumerate}
+
+Therefore, by Banach's Fixed Point Theorem, $g$ has exactly one fixed point, which is unique, namely $x^* \in D$.
+
+Then, provided we have chosen $x_0 \in D$, given we defined $x_{k+1} =g(x_k)$, we know by BFPT that $x_k \to x^*$ as $k \to \infty$.
+
+Hence, the convergence of the iteration $x_{k+1} = g(x_k)$ is super-linear with order $1 + \alpha$ and consequently, the statement holds. $\quad \Box$
+
+\hrulefill
+
+
+\end{enumerate}
+
+
+\end{document}
+
+
